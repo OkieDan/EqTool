@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using EQTool.Models;
 using EQTool.Services;
+using EQTool.Services.Map;
 using EQTool.ViewModels;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,7 +24,6 @@ namespace EQTool
     public partial class App : Application
     {
         public static HttpClient httpclient = new HttpClient();
-
         private Autofac.IContainer container;
         private System.Windows.Forms.NotifyIcon SystemTrayIcon;
 
@@ -40,6 +41,11 @@ namespace EQTool
 
         private EQToolSettings EQToolSettings => container.Resolve<EQToolSettings>();
         public static List<Window> WindowList = new List<Window>();
+
+        //public static SignalRMapService MapService { get; private set; }
+        public static SignalRMapService MapService { get; private set; }
+        
+
 
         private bool WaitForEQToolToStop()
         {
@@ -185,6 +191,7 @@ namespace EQTool
                 updateservice.CheckForUpdates(Version);
 #endif
             }
+
             InitStuff();
         }
 
@@ -211,7 +218,7 @@ namespace EQTool
             var updates = new System.Windows.Forms.MenuItem("Check for Update", CheckForUpdates);
             var versionstring = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var beta = false;
-
+            
 #if BETA || DEBUG
             beta = true;
 #endif
@@ -259,6 +266,17 @@ namespace EQTool
             }
             else
             {
+#if DEBUG
+                // todo: this needs to be put somewhere that attempts to connect until service is available and reconnects if dropped
+                HubConnection hubConnection = new HubConnectionBuilder()
+                    //.WithUrl("https://localhost:7230/EqToolMap")
+                    .WithUrl("http://eqtool.netendpoint.com/EqToolMap")
+                    .Build();
+                //hubConnection.HandshakeTimeout = new TimeSpan(0, 0, 3);
+                MapService = new SignalRMapService(hubConnection);
+                MapService.Connect();
+#endif
+
                 ToggleMenuButtons(true);
                 if (!EQToolSettings.SpellWindowState.Closed)
                 {
@@ -280,6 +298,17 @@ namespace EQTool
             PlayerTrackerService = container.Resolve<PlayerTrackerService>();
             ZoneActivityTrackingService = container.Resolve<ZoneActivityTrackingService>();
             logParser.PlayerChangeEvent += LogParser_PlayerChangeEvent;
+
+
+            logParser.PlayerLocationEvent += LogParser_PlayerLocationEvent;
+
+        }
+
+
+        private void LogParser_PlayerLocationEvent(object sender, LogParser.PlayerLocationEventArgs e)
+        {
+            MapService.SendPlayerLocation(new Dto.PlayerLocation() { PlayerName = this.PlayerTrackerService.activePlayer.Player.Name, X = e.Location.X, Y = e.Location.Y, Z = e.Location.Z });
+
         }
 
         private void UITimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

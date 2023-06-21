@@ -1,8 +1,10 @@
-﻿using EQTool.Models;
+﻿using EQTool.Dto;
+using EQTool.Models;
 using EQTool.Services;
 using EQTool.Services.Map;
 using EQTool.Shapes;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -30,6 +32,7 @@ namespace EQTool.ViewModels
         public Point3D Lastlocation = new Point3D(0, 0, 0);
         public AABB AABB = new AABB();
         public Point3D MapOffset = new Point3D(0, 0, 0);
+        private List<OtherPlayer> OtherPlayers = new List<OtherPlayer>();
 
         public ArrowLine PlayerLocationIcon { get; set; }
 
@@ -118,7 +121,7 @@ namespace EQTool.ViewModels
                     //}
                     MapOffset = map.Offset;
                     var linethickness = MathHelper.ChangeRange(Math.Max(map.AABB.MaxWidth, map.AABB.MaxHeight), 800, 35000, 2, 40);
-
+                    canvas.Children.Clear();
                     foreach (var group in map.Lines)
                     {
                         var c = EQMapColor.GetThemedColors(group.Color);
@@ -211,7 +214,73 @@ namespace EQTool.ViewModels
                 MapLoading = false;
             }
         }
+        public bool UpdateOtherPlayerLocations(PlayerLocation otherPlayerLocation, PanAndZoomCanvas canvas)
+        {
+            try
+            {
+                if (canvas == null)
+                    return false;
 
+                var otherPlayerPrevious = OtherPlayers.SingleOrDefault(p => p.Location.MapName == otherPlayerLocation.MapName && p.Location.PlayerName == otherPlayerLocation.PlayerName);
+
+                // remove other player old label from canvas
+                if (otherPlayerPrevious != null)
+                {
+                    foreach (var element in otherPlayerPrevious.MapElements)
+                    {
+                        canvas.Children.Remove(element);
+                    }
+                    OtherPlayers.Remove(otherPlayerPrevious);
+                }
+
+                var item = new MapLabel()
+                {
+                    Color = System.Windows.Media.Color.FromRgb(50, 255, 50),
+                    label = otherPlayerLocation.PlayerName,
+                    LabelSize = LabelSize.Large,
+                    Point = new Point3D(otherPlayerLocation.X, otherPlayerLocation.Y, otherPlayerLocation.Z),
+                    //Id = "OtherPlayer_" + otherPlayerLocation.PlayerName
+                };
+                var text = new TextBlock
+                {
+                    Tag = item,
+                    Text = item.label.Replace('_', ' '),
+                    FontSize = item.LabelSize == LabelSize.Large ? ZoneLabelFontSize : OtherLabelFontSize,
+                    //Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255)),
+                    Foreground = new SolidColorBrush(item.Color),
+                    RenderTransform = canvas.Transform
+                };
+                var circle = new Ellipse()
+                {
+                    Tag = item,
+                    Width = 10,
+                    Height = 10,
+                    //Stroke = Brushes.Red,
+                    Stroke = new SolidColorBrush(item.Color),
+                    StrokeThickness = 3
+                };
+                var circleIdx = canvas.Children.Add(circle);
+                var textIdx = canvas.Children.Add(text);
+
+                var otherPlayer = new OtherPlayer() { Location = otherPlayerLocation };
+                otherPlayer.MapElements.Add((FrameworkElement)canvas.Children[circleIdx]);
+                otherPlayer.MapElements.Add((FrameworkElement)canvas.Children[textIdx]);
+
+                OtherPlayers.Add(otherPlayer);
+
+                Canvas.SetLeft(text, item.Point.X);
+                Canvas.SetTop(text, item.Point.Y);
+                Canvas.SetLeft(circle, item.Point.X);
+                Canvas.SetTop(circle, item.Point.Y);
+
+
+                return true;
+            }
+            catch (Exception ex){
+                Debug.Print(ex.Message);
+                return false;
+            }
+        }
         public bool LoadDefaultMap(PanAndZoomCanvas canvas)
         {
             _ = activePlayer.Update();
