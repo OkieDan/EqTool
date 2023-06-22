@@ -284,8 +284,8 @@ namespace EQTool.ViewModels
                 var transform2 = new MatrixTransform();
                 _ = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
                 transform2.Matrix = translation.Value;
-                text.RenderTransform = transform2;
                 circle.RenderTransform = transform2;
+                text.RenderTransform = transform2;
 
 
                 /*
