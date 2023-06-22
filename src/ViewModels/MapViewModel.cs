@@ -3,6 +3,7 @@ using EQTool.Models;
 using EQTool.Services;
 using EQTool.Services.Map;
 using EQTool.Shapes;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -267,11 +268,44 @@ namespace EQTool.ViewModels
                 otherPlayer.MapElements.Add((FrameworkElement)canvas.Children[textIdx]);
 
                 OtherPlayers.Add(otherPlayer);
-
+                /*
                 Canvas.SetLeft(text, item.Point.X);
                 Canvas.SetTop(text, item.Point.Y);
                 Canvas.SetLeft(circle, item.Point.X);
                 Canvas.SetTop(circle, item.Point.Y);
+                */
+                Canvas.SetLeft(text, -(item.Point.Y + MapOffset.X) * canvas.CurrentScaling);
+                Canvas.SetTop(text, -(item.Point.X + MapOffset.Y) * canvas.CurrentScaling);
+                Canvas.SetLeft(circle, -(item.Point.Y + MapOffset.X) * canvas.CurrentScaling);
+                Canvas.SetTop(circle, -(item.Point.X + MapOffset.Y) * canvas.CurrentScaling);
+
+
+                var translation = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
+                var transform2 = new MatrixTransform();
+                _ = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
+                transform2.Matrix = translation.Value;
+                text.RenderTransform = transform2;
+                circle.RenderTransform = transform2;
+
+
+                /*
+                PlayerLocationIcon.RotateTransform = new RotateTransform(angle);
+                Canvas.SetLeft(PlayerLocationIcon, -(value1.Y + MapOffset.X) * canvas.CurrentScaling);
+                Canvas.SetTop(PlayerLocationIcon, -(value1.X + MapOffset.Y) * canvas.CurrentScaling);
+                var heighdiv2 = PlayerLocationCircle.Height / 2 / canvas.CurrentScaling;
+                Canvas.SetLeft(PlayerLocationCircle, -(value1.Y + MapOffset.X + heighdiv2) * canvas.CurrentScaling);
+                Canvas.SetTop(PlayerLocationCircle, -(value1.X + MapOffset.Y + heighdiv2) * canvas.CurrentScaling);
+                var transform = new MatrixTransform();
+                var translation = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
+                transform.Matrix = PlayerLocationIcon.RotateTransform.Value * translation.Value;
+                PlayerLocationIcon.RenderTransform = transform;
+                var transform2 = new MatrixTransform();
+                _ = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
+                transform2.Matrix = translation.Value;
+                PlayerLocationCircle.RenderTransform = transform2;
+                 
+                 */
+
 
 
                 return true;
