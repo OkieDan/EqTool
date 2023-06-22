@@ -67,16 +67,13 @@ namespace EQTool
         private void SignalRMapService_PlayerLocationReceived(Dto.PlayerLocation obj)
         {
             Debug.Print($"{obj} > {obj.ServerName}, {obj.PlayerName}, {obj.MapName}, {obj.X}, {obj.Y}, {obj.Z}");
-            //if(obj.PlayerName!= null && obj.PlayerName != playerTrackerService.activePlayer.Player.Name)
-            //{
-            Application.Current.Dispatcher.Invoke((Action)delegate {
-                mapViewModel.UpdateOtherPlayerLocations(obj, Map);
-            });
-            
-            //}
-
-
-
+            if (obj.PlayerName != null && obj.PlayerName != playerTrackerService.activePlayer.Player.Name)
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    mapViewModel.UpdateOtherPlayerLocations(obj, Map);
+                });
+            }
         }
 
         private void LogParser_DeadEvent(object sender, LogParser.DeadEventArgs e)

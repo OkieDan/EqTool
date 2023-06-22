@@ -266,19 +266,12 @@ namespace EQTool.ViewModels
                 var otherPlayer = new OtherPlayer() { Location = otherPlayerLocation };
                 otherPlayer.MapElements.Add((FrameworkElement)canvas.Children[circleIdx]);
                 otherPlayer.MapElements.Add((FrameworkElement)canvas.Children[textIdx]);
-
                 OtherPlayers.Add(otherPlayer);
-                /*
-                Canvas.SetLeft(text, item.Point.X);
-                Canvas.SetTop(text, item.Point.Y);
-                Canvas.SetLeft(circle, item.Point.X);
-                Canvas.SetTop(circle, item.Point.Y);
-                */
+
                 Canvas.SetLeft(text, -(item.Point.Y + MapOffset.X) * canvas.CurrentScaling);
                 Canvas.SetTop(text, -(item.Point.X + MapOffset.Y) * canvas.CurrentScaling);
                 Canvas.SetLeft(circle, -(item.Point.Y + MapOffset.X) * canvas.CurrentScaling);
                 Canvas.SetTop(circle, -(item.Point.X + MapOffset.Y) * canvas.CurrentScaling);
-
 
                 var translation = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
                 var transform2 = new MatrixTransform();
