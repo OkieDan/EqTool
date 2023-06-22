@@ -287,27 +287,6 @@ namespace EQTool.ViewModels
                 circle.RenderTransform = transform2;
                 text.RenderTransform = transform2;
 
-
-                /*
-                PlayerLocationIcon.RotateTransform = new RotateTransform(angle);
-                Canvas.SetLeft(PlayerLocationIcon, -(value1.Y + MapOffset.X) * canvas.CurrentScaling);
-                Canvas.SetTop(PlayerLocationIcon, -(value1.X + MapOffset.Y) * canvas.CurrentScaling);
-                var heighdiv2 = PlayerLocationCircle.Height / 2 / canvas.CurrentScaling;
-                Canvas.SetLeft(PlayerLocationCircle, -(value1.Y + MapOffset.X + heighdiv2) * canvas.CurrentScaling);
-                Canvas.SetTop(PlayerLocationCircle, -(value1.X + MapOffset.Y + heighdiv2) * canvas.CurrentScaling);
-                var transform = new MatrixTransform();
-                var translation = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
-                transform.Matrix = PlayerLocationIcon.RotateTransform.Value * translation.Value;
-                PlayerLocationIcon.RenderTransform = transform;
-                var transform2 = new MatrixTransform();
-                _ = new TranslateTransform(canvas.Transform.Value.OffsetX, canvas.Transform.Value.OffsetY);
-                transform2.Matrix = translation.Value;
-                PlayerLocationCircle.RenderTransform = transform2;
-                 
-                 */
-
-
-
                 return true;
             }
             catch (Exception ex){
