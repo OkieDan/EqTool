@@ -1,5 +1,4 @@
-﻿using EQTool.Dto;
-using EQTool.Models;
+﻿using EQTool.Models;
 using EQTool.Services;
 using EQTool.Services.Map;
 using EQTool.Services.Spells.Log;
@@ -64,13 +63,13 @@ namespace EQTool
 
         }
 
-        private void SignalRMapService_PlayerLocationReceived(Dto.PlayerLocation obj)
+        private void SignalRMapService_PlayerLocationReceived(PlayerLocation obj)
         {
-            Debug.Print($"{obj} > {obj.ServerName}, {obj.PlayerName}, {obj.MapName}, {obj.X}, {obj.Y}, {obj.Z}");
+            Debug.Print($"{obj} > {obj.Server}, {obj.PlayerName}, {obj.ZoneName}, {obj.X}, {obj.Y}, {obj.Z}");
             if (obj != null && obj.PlayerName != null && playerTrackerService != null && playerTrackerService.activePlayer.Player != null && 
                 obj.PlayerName != playerTrackerService.activePlayer.Player.Name && 
-                obj.ServerName == playerTrackerService.activePlayer.Player.Server.ToString() &&
-                obj.MapName == playerTrackerService.activePlayer.Player.Zone)
+                obj.Server == playerTrackerService.activePlayer.Player.Server &&
+                obj.ZoneName == playerTrackerService.activePlayer.Player.Zone)
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {

@@ -1,5 +1,4 @@
-﻿using EQTool.Dto;
-using EQTool.Models;
+﻿using EQTool.Models;
 using EQTool.Services;
 using EQTool.Services.Map;
 using EQTool.Shapes;

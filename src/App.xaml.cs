@@ -271,8 +271,7 @@ namespace EQTool
                 {
                     // todo: this needs to be put somewhere that attempts to connect until service is available and reconnects if dropped
                     HubConnection hubConnection = new HubConnectionBuilder()
-                        //.WithUrl("https://localhost:7230/EqToolMap")
-                        .WithUrl("http://eqtool.netendpoint.com/EqToolMap")
+                        .WithUrl("http://pigparse.org/EqToolMap")
                         .Build();
                     //hubConnection.HandshakeTimeout = new TimeSpan(0, 0, 3);
                     MapService = new SignalRMapService(hubConnection);
@@ -313,11 +312,11 @@ namespace EQTool
         {
             if (MapService==null) return;
             try {
-                MapService.SendPlayerLocation(new Dto.PlayerLocation()
+                MapService.SendPlayerLocation(new PlayerLocation()
                 {
                     PlayerName = this.PlayerTrackerService.activePlayer.Player.Name,
-                    MapName = e.PlayerInfo.Zone,
-                    ServerName = e.PlayerInfo.Server.ToString(),
+                    ZoneName = e.PlayerInfo.Zone,
+                    Server = e.PlayerInfo.Server,
                     X = e.Location.X,
                     Y = e.Location.Y,
                     Z = e.Location.Z
