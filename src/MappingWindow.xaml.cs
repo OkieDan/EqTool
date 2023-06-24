@@ -67,7 +67,10 @@ namespace EQTool
         private void SignalRMapService_PlayerLocationReceived(Dto.PlayerLocation obj)
         {
             Debug.Print($"{obj} > {obj.ServerName}, {obj.PlayerName}, {obj.MapName}, {obj.X}, {obj.Y}, {obj.Z}");
-            if (obj.PlayerName != null && obj.PlayerName != playerTrackerService.activePlayer.Player.Name)
+            if (obj != null && obj.PlayerName != null && playerTrackerService != null && playerTrackerService.activePlayer.Player != null && 
+                obj.PlayerName != playerTrackerService.activePlayer.Player.Name && 
+                obj.ServerName == playerTrackerService.activePlayer.Player.Server.ToString() &&
+                obj.MapName == playerTrackerService.activePlayer.Player.Zone)
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
@@ -131,11 +134,12 @@ namespace EQTool
         private void LogParser_PlayerLocationEvent(object sender, LogParser.PlayerLocationEventArgs e)
         {
             mapViewModel.UpdateLocation(e.Location, Map);
-            
+
+            // TODO: Add option to settings window for user to check to "Bring to Front on /loc"
             // Bring map to front if not already always on top
             if (EQTool.Properties.Settings.Default.GlobalMapWindowAlwaysOnTop == false)
             {
-                this.Topmost = true;            
+                this.Topmost = true;
                 this.Topmost = false;
             }
         }
