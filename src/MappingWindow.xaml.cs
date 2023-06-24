@@ -1,14 +1,11 @@
 ﻿using EQTool.Models;
 using EQTool.Services;
 using EQTool.Services.Map;
-using EQTool.Services.Spells.Log;
 using EQTool.ViewModels;
+using EQToolShared.HubModels;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -65,7 +62,7 @@ namespace EQTool
 
         private void SignalRMapService_PlayerLocationReceived(PlayerLocation obj)
         {
-            Debug.Print($"{obj} > {obj.Server}, {obj.PlayerName}, {obj.ZoneName}, {obj.X}, {obj.Y}, {obj.Z}");
+            //Debug.Print($"{obj} > {obj.Server}, {obj.PlayerName}, {obj.ZoneName}, {obj.X}, {obj.Y}, {obj.Z}");
             if (obj != null && obj.PlayerName != null && playerTrackerService != null && playerTrackerService.activePlayer.Player != null && 
                 obj.PlayerName != playerTrackerService.activePlayer.Player.Name && 
                 obj.Server == playerTrackerService.activePlayer.Player.Server &&

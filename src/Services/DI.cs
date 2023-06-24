@@ -1,9 +1,7 @@
 ﻿using Autofac;
 using Autofac.Features.ResolveAnything;
 using EQTool.Models;
-using EQTool.Services.Map;
 using EQTool.ViewModels;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace EQTool.Services
 {

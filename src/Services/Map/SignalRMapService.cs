@@ -1,4 +1,5 @@
-﻿using EQTool.Models
+﻿using EQTool.Models;
+using EQToolShared.HubModels;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;

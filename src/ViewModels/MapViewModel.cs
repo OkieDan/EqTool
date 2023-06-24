@@ -1,8 +1,8 @@
 ﻿using EQTool.Models;
+using EQToolShared.HubModels;
 using EQTool.Services;
 using EQTool.Services.Map;
 using EQTool.Shapes;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -121,7 +121,7 @@ namespace EQTool.ViewModels
                     //}
                     MapOffset = map.Offset;
                     var linethickness = MathHelper.ChangeRange(Math.Max(map.AABB.MaxWidth, map.AABB.MaxHeight), 800, 35000, 2, 40);
-                    canvas.Children.Clear();
+
                     foreach (var group in map.Lines)
                     {
                         var c = EQMapColor.GetThemedColors(group.Color);
@@ -221,7 +221,7 @@ namespace EQTool.ViewModels
                 if (canvas == null)
                     return false;
 
-                var otherPlayerPrevious = OtherPlayers.SingleOrDefault(p => p.Location.MapName == otherPlayerLocation.MapName && p.Location.PlayerName == otherPlayerLocation.PlayerName);
+                var otherPlayerPrevious = OtherPlayers.SingleOrDefault(p => p.Location.ZoneName == otherPlayerLocation.ZoneName && p.Location.PlayerName == otherPlayerLocation.PlayerName);
 
                 // remove other player old label from canvas
                 if (otherPlayerPrevious != null)

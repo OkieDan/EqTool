@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using EQTool.Models;
+using EQToolShared.HubModels;
 using EQTool.Services;
 using EQTool.Services.Map;
 using EQTool.ViewModels;
@@ -24,6 +25,7 @@ namespace EQTool
     public partial class App : Application
     {
         public static HttpClient httpclient = new HttpClient();
+
         private Autofac.IContainer container;
         private System.Windows.Forms.NotifyIcon SystemTrayIcon;
 
@@ -42,7 +44,6 @@ namespace EQTool
         private EQToolSettings EQToolSettings => container.Resolve<EQToolSettings>();
         public static List<Window> WindowList = new List<Window>();
 
-        //public static SignalRMapService MapService { get; private set; }
         public static SignalRMapService MapService { get; private set; }
 
 
@@ -191,7 +192,6 @@ namespace EQTool
                 updateservice.CheckForUpdates(Version);
 #endif
             }
-
             InitStuff();
         }
 
@@ -269,15 +269,17 @@ namespace EQTool
                 //#if DEBUG
                 try
                 {
-                    // todo: this needs to be put somewhere that attempts to connect until service is available and reconnects if dropped
+                    // TODO: Put somewhere that attempts to connect until service is available and reconnects if dropped
                     HubConnection hubConnection = new HubConnectionBuilder()
-                        .WithUrl("http://pigparse.org/EqToolMap")
+                        .WithUrl("https://pigparse.org/EqToolMap")
                         .Build();
                     //hubConnection.HandshakeTimeout = new TimeSpan(0, 0, 3);
                     MapService = new SignalRMapService(hubConnection);
                     MapService.Connect();
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) {
+                    Debug.Print(ex.Message);
+                }
                 //#endif
 
                 ToggleMenuButtons(true);
